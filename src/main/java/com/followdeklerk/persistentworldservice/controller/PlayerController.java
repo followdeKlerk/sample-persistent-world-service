@@ -5,6 +5,7 @@ import com.followdeklerk.persistentworldservice.service.PlayerService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class PlayerController {
     }
 
     @RequestMapping("/create")
-    public ResponseEntity<PlayerDto> createPlayer(@RequestBody PlayerDto playerdto) {
+    public ResponseEntity<PlayerDto> createPlayer(@Validated @RequestBody PlayerDto playerdto) {
         if (playerdto.getName() == null || playerdto.getName().isEmpty()) {
             throw new IllegalArgumentException("Player name cannot be null or empty");
         }
@@ -49,7 +50,7 @@ public class PlayerController {
     }
 
     @RequestMapping("/update/{id}")
-    public ResponseEntity<PlayerDto> updatePlayer(@PathVariable Long id, @RequestBody PlayerDto playerDto) {
+    public ResponseEntity<PlayerDto> updatePlayer(@PathVariable Long id, @Validated @RequestBody PlayerDto playerDto) {
         return new ResponseEntity<>(playerService.updatePlayer(id, playerDto), HttpStatus.OK);
     }
 

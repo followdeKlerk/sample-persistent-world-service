@@ -4,9 +4,7 @@ import com.followdeklerk.persistentworldservice.dto.LocationDto;
 import com.followdeklerk.persistentworldservice.service.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,28 +19,28 @@ public class LocationController {
     }
 
     @RequestMapping("/create")
-    public ResponseEntity<LocationDto> createLocation(LocationDto locationDto) {
+    public ResponseEntity<LocationDto> createLocation(@RequestBody LocationDto locationDto) {
         return new ResponseEntity<>(locationService.createLocation(locationDto), HttpStatus.CREATED);
     }
 
     @RequestMapping("/update/{id}")
-    public ResponseEntity<LocationDto> updateLocation(Long id, LocationDto locationDto) {
+    public ResponseEntity<LocationDto> updateLocation(@PathVariable Long id, @RequestBody LocationDto locationDto) {
         return new ResponseEntity<>(locationService.updateLocation(id, locationDto), HttpStatus.OK);
     }
 
     @RequestMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteLocation(Long id) {
+    public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         locationService.deleteLocation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping("/get/{id}")
-    public ResponseEntity<LocationDto> getLocationById(Long id) {
+    public ResponseEntity<LocationDto> getLocationById(@PathVariable Long id) {
         return new ResponseEntity<>(locationService.getLocationById(id), HttpStatus.OK);
     }
 
     @RequestMapping("/getByName/{locationName}")
-    public ResponseEntity<LocationDto> getLocationByName(String locationName) {
+    public ResponseEntity<LocationDto> getLocationByName(@PathVariable String locationName) {
         return new ResponseEntity<>(locationService.getLocationByName(locationName), HttpStatus.OK);
     }
 
