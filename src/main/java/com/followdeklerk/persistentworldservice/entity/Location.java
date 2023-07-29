@@ -1,5 +1,6 @@
 package com.followdeklerk.persistentworldservice.entity;
 
+import com.followdeklerk.persistentworldservice.dto.LocationDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Location {
     private Long id;
 
     @Column(name = "name")
-    private String locationName;
+    private String name;
 
     @Column(name = "description")
     private String description;
@@ -26,4 +27,11 @@ public class Location {
     @ToString.Exclude
     private List<Enemy> enemies;
 
+    public LocationDto toDto() {
+        LocationDto locationDto = new LocationDto();
+        locationDto.setName(this.getName());
+        locationDto.setDescription(this.getDescription());
+        locationDto.setEnemies(this.getEnemies());
+        return locationDto;
+    }
 }

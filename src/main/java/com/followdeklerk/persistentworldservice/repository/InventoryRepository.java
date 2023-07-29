@@ -1,4 +1,4 @@
-package com.followdeklerk.persistentworldservice.dao;
+package com.followdeklerk.persistentworldservice.repository;
 
 import com.followdeklerk.persistentworldservice.entity.Inventory;
 import com.followdeklerk.persistentworldservice.entity.Player;

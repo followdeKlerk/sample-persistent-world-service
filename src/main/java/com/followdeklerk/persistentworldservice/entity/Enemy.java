@@ -1,7 +1,11 @@
 package com.followdeklerk.persistentworldservice.entity;
 
+import com.followdeklerk.persistentworldservice.dto.EnemyDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,6 +71,16 @@ public class Enemy {
 
     public static boolean isAlive(Enemy enemy) {
         return enemy.enemyHealth > 0;
+    }
+
+    public EnemyDto toDto() {
+        EnemyDto enemyDto = new EnemyDto();
+        enemyDto.setEnemyName(this.getEnemyName());
+        enemyDto.setLevel(this.getLevel());
+        enemyDto.setMaxHealth(this.getMaxHealth());
+        enemyDto.setLocation(this.getLocation());
+        enemyDto.setAlive(this.isAlive());
+        return enemyDto;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.followdeklerk.persistentworldservice.entity;
 
+import com.followdeklerk.persistentworldservice.dto.DamageTypeDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,11 +15,11 @@ public class DamageType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "physical_damage")
-    private String physicalDamage;
+    @Column(name = "damage_type")
+    private String damageType;
 
-    @Column(name = "magical_damage")
-    private String magicalDamage;
+    @Column(name = "modifier")
+    private Integer modifier;
 
     @ManyToOne
     private Player player;
@@ -26,4 +27,10 @@ public class DamageType {
     @ManyToOne
     private Enemy enemy;
 
+    public DamageTypeDto toDto() {
+        DamageTypeDto damageTypeDto = new DamageTypeDto();
+        damageTypeDto.setDamageType(this.damageType);
+        damageTypeDto.setModifier(this.modifier);
+        return damageTypeDto;
+    }
 }

@@ -1,9 +1,11 @@
 package com.followdeklerk.persistentworldservice.service;
 
-import com.followdeklerk.persistentworldservice.dao.ItemRepository;
+import com.followdeklerk.persistentworldservice.dto.ItemDto;
 import com.followdeklerk.persistentworldservice.entity.Item;
+import com.followdeklerk.persistentworldservice.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,43 +17,46 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public Item createItem(String itemName, String itemDescription) {
+    public ItemDto createItem(ItemDto itemDto) {
         Item item = new Item();
-        item.setItemName(itemName);
-        item.setItemDescription(itemDescription);
-        return item;
+        item.setItemName(itemDto.getItemName());
+        item.setItemDescription(itemDto.getItemDescription());
+        item.setDropChance(itemDto.getDropChance());
+        item.setItemType(itemDto.getItemType());
+        return itemRepository.save(item).toDto();
     }
 
-    public Item updateItem(Long id, String itemName, String itemDescription) {
+    public ItemDto updateItem(Long id, ItemDto itemDto) {
         Item item = itemRepository.findById(id).orElseThrow();
-        item.setId(id);
-        item.setItemName(itemName);
-        item.setItemDescription(itemDescription);
-        return item;
+        item.setItemName(itemDto.getItemName());
+        item.setItemDescription(itemDto.getItemDescription());
+        item.setDropChance(itemDto.getDropChance());
+        item.setItemType(itemDto.getItemType());
+        return itemRepository.save(item).toDto();
     }
 
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }
 
-    public Item getItemById(Long id) {
-        return itemRepository.findById(id).orElseThrow();
+    public ItemDto getItemById(Long id) {
+        return itemRepository.findById(id).orElseThrow().toDto();
     }
 
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public List<ItemDto> getAllItems() {
+        List<Item> items = itemRepository.findAll();
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for (Item item : items) {
+            itemDtos.add(item.toDto());
+        }
+        return itemDtos;
     }
 
-    public Item getItemsByType(String itemType) {
-        return itemRepository.findByItemType(itemType);
-
+    public ItemDto getItemsByType(String itemType) {
+        return itemRepository.findByItemType(itemType).toDto();
     }
 
-    public Item getEquippedItems(Boolean equipped) {
-        return itemRepository.findByEquipped(equipped);
-    }
-
-    public void getInventoryItems(int inventoryId) {
-        itemRepository.getInventoryItems(inventoryId);
+    public ItemDto getEquippedItems(Boolean equipped) {
+        return itemRepository.findByEquipped(equipped).toDto();
     }
 }

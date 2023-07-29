@@ -1,4 +1,4 @@
-package com.followdeklerk.persistentworldservice.dao;
+package com.followdeklerk.persistentworldservice.repository;
 
 import com.followdeklerk.persistentworldservice.entity.DamageType;
 import org.springframework.data.jpa.repository.JpaRepository;

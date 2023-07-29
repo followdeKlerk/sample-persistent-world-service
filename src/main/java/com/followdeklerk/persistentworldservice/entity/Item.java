@@ -1,5 +1,6 @@
 package com.followdeklerk.persistentworldservice.entity;
 
+import com.followdeklerk.persistentworldservice.dto.ItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,4 +44,14 @@ public class Item {
     @JoinColumn(name = "location_id")
     private Location location;
 
+    public ItemDto toDto() {
+        ItemDto itemDto = new ItemDto();
+        itemDto.setItemName(this.getItemName());
+        itemDto.setItemDescription(this.getItemDescription());
+        itemDto.setInventory(this.getInventory());
+        itemDto.setDropChance(this.getDropChance());
+        itemDto.setItemType(this.getItemType());
+        itemDto.setEquipped(this.isEquipped());
+        return itemDto;
+    }
 }

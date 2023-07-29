@@ -1,10 +1,11 @@
 package com.followdeklerk.persistentworldservice.service;
 
-import com.followdeklerk.persistentworldservice.dao.EnemyRepository;
+import com.followdeklerk.persistentworldservice.dto.EnemyDto;
 import com.followdeklerk.persistentworldservice.entity.Enemy;
-import com.followdeklerk.persistentworldservice.entity.Location;
+import com.followdeklerk.persistentworldservice.repository.EnemyRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,31 +17,41 @@ public class EnemyService {
         this.enemyRepository = enemyRepository;
     }
 
-    public Enemy createEnemy(String enemyName, int level, int maxHealth, Location location) {
+    public EnemyDto createEnemy(EnemyDto enemyDto) {
         Enemy enemy = new Enemy();
-        enemy.setEnemyName(enemyName);
-        enemy.setLevel(level);
-        enemy.setMaxHealth(maxHealth);
-        enemy.setLocation(location);
-        return enemy;
+        enemy.setEnemyName(enemyDto.getEnemyName());
+        enemy.setLevel(enemyDto.getLevel());
+        enemy.setMaxHealth(enemyDto.getMaxHealth());
+        enemy.setLocation(enemyDto.getLocation());
+        return enemyRepository.save(enemy).toDto();
     }
-    public Enemy updateEnemy(Long id, String enemyName, int level, int health, Location location, boolean isAlive) {
+
+    public EnemyDto updateEnemy(Long id, EnemyDto enemyDto) {
         Enemy enemy = enemyRepository.findById(id).orElseThrow();
-        enemy.setEnemyName(enemyName);
-        enemy.setLevel(level);
-        enemy.setEnemyHealth(health);
-        enemy.setLocation(location);
-        enemy.setAlive(isAlive);
-        return enemy;
+        enemy.setEnemyName(enemyDto.getEnemyName());
+        enemy.setLevel(enemyDto.getLevel());
+        enemy.setEnemyHealth(enemyDto.getEnemyHealth());
+        enemy.setLocation(enemyDto.getLocation());
+        enemy.setAlive(enemyDto.isAlive());
+        return enemyRepository.save(enemy).toDto();
     }
+
     public void deleteEnemy(Long id) {
         enemyRepository.deleteById(id);
     }
-    public Enemy getEnemyById(Long id) {
-        return enemyRepository.findById(id).orElseThrow();
+
+    public EnemyDto getEnemyById(Long id) {
+        return enemyRepository.findById(id).orElseThrow().toDto();
     }
-    public List<Enemy> getAllEnemies() {
-        return enemyRepository.findAll();
+
+    public List<EnemyDto> getAllEnemies() {
+        List<Enemy> enemies = enemyRepository.findAll();
+        List<EnemyDto> enemyDtos = new ArrayList<>();
+        for (Enemy enemy : enemies) {
+            enemyDtos.add(enemy.toDto());
+        }
+        return enemyDtos;
     }
 
 }
+

@@ -1,10 +1,13 @@
 package com.followdeklerk.persistentworldservice.service;
 
-import com.followdeklerk.persistentworldservice.dao.LocationRepository;
+import com.followdeklerk.persistentworldservice.dto.LocationDto;
 import com.followdeklerk.persistentworldservice.entity.Location;
+import com.followdeklerk.persistentworldservice.repository.LocationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -15,39 +18,44 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public Location createLocation(String locationName, String description) {
+    public LocationDto createLocation(LocationDto locationDto) {
         Location location = new Location();
-        location.setLocationName(locationName);
-        location.setDescription(description);
-        return location;
+        location.setName(locationDto.getName());
+        location.setDescription(locationDto.getDescription());
+        return locationRepository.save(location).toDto();
     }
 
-    public Location updateLocation(Long id, String locationName, String description) {
+    public LocationDto updateLocation(Long id, LocationDto locationDto) {
         Location location = locationRepository.findById(id).orElseThrow();
         location.setId(id);
-        location.setLocationName(locationName);
-        location.setDescription(description);
-        return location;
+        location.setName(locationDto.getName());
+        location.setDescription(locationDto.getDescription());
+        return locationRepository.save(location).toDto();
     }
 
     public void deleteLocation(Long id) {
         locationRepository.deleteById(id);
     }
 
-    public Location getLocationById(Long id) {
-        return locationRepository.findById(id).orElseThrow();
+    public LocationDto getLocationById(Long id) {
+        return locationRepository.findById(id).orElseThrow().toDto();
     }
 
-    public List<Location> getAllLocations() {
-        return locationRepository.findAll();
+    public List<LocationDto> getAllLocations() {
+        List<Location> locations = locationRepository.findAll();
+        List<LocationDto> locationDtos = new ArrayList<>();
+        for (Location location : locations) {
+            locationDtos.add(location.toDto());
+        }
+        return locationDtos;
     }
 
-    public Location getLocationByName(String locationName) {
-        return locationRepository.findByName(locationName);
+    public LocationDto getLocationByName(String locationName) {
+        return locationRepository.findByName(locationName).toDto();
     }
 
-    public List<Location> getLocationsWithEnemies() {
-        return locationRepository.findByEnemiesIsNotNull();
+    public List<LocationDto> getLocationsWithEnemies() {
+        return locationRepository.findByEnemiesIsNotNull().stream().map(Location::toDto).collect(Collectors.toList());
     }
 
 }

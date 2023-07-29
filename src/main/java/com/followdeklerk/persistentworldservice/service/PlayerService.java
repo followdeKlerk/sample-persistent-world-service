@@ -1,7 +1,11 @@
 package com.followdeklerk.persistentworldservice.service;
 
-import com.followdeklerk.persistentworldservice.dao.PlayerRepository;
-import com.followdeklerk.persistentworldservice.entity.*;
+import com.followdeklerk.persistentworldservice.dto.EnemyDto;
+import com.followdeklerk.persistentworldservice.dto.LocationDto;
+import com.followdeklerk.persistentworldservice.dto.PlayerDto;
+import com.followdeklerk.persistentworldservice.entity.Enemy;
+import com.followdeklerk.persistentworldservice.entity.Player;
+import com.followdeklerk.persistentworldservice.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,62 +20,67 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    public Player createPlayer(String name, int experiencePoints, int level, int maxHealth, Inventory inventory){
-    Player player = new Player();
-    player.setName(name);
-    player.setExperiencePoints(experiencePoints);
-    player.setLevel(level);
-    player.setMaxHealth(maxHealth);
-    player.setInventory(inventory);
-    return playerRepository.save(player);
+    public PlayerDto createPlayer(PlayerDto playerDto) {
+        Player player = new Player();
+        player.setName(playerDto.getName());
+        player.setExperiencePoints(playerDto.getExperiencePoints());
+        player.setLevel(playerDto.getLevel());
+        player.setMaxHealth(playerDto.getMaxHealth());
+        player.setInventory(playerDto.getInventory());
+        return playerRepository.save(player).toDto();
     }
 
-    public Player updatePlayer(Long id, String name, int experiencePoints, int level, int maxHealth, Inventory inventory){
+    public PlayerDto updatePlayer(Long id, PlayerDto playerDto) {
         Player player = playerRepository.findById(id).orElseThrow();
-        player.setName(name);
-        player.setExperiencePoints(experiencePoints);
-        player.setLevel(level);
-        player.setMaxHealth(maxHealth);
-        player.setInventory(inventory);
-        return playerRepository.save(player);
+        player.setName(playerDto.getName());
+        player.setExperiencePoints(playerDto.getExperiencePoints());
+        player.setLevel(playerDto.getLevel());
+        player.setMaxHealth(playerDto.getMaxHealth());
+        player.setInventory(playerDto.getInventory());
+        return playerRepository.save(player).toDto();
     }
 
     public void deletePlayer(Long id) {
         playerRepository.deleteById(id);
     }
 
-    public Player findPlayerById(Long id) {
-        return playerRepository.findById(id).orElseThrow();
+    public PlayerDto findPlayerById(Long id) {
+        return playerRepository.findById(id).orElseThrow().toDto();
     }
 
-    public List<Player> findAllPlayers(){
-        return playerRepository.findAll();
+    public List<PlayerDto> getAllPlayers() {
+        List<Player> players = playerRepository.findAll();
+        List<PlayerDto> playerDtos = new ArrayList<>();
+        for (Player player : players) {
+            playerDtos.add(player.toDto());
+        }
+        return playerDtos;
     }
 
-    public int calculateExperienceGain(Player player, Enemy enemy) {
-        int experienceGain = enemy.getLevel() * 10;
-        if (player.getLevel() > enemy.getLevel()) {
+    public int calculateExperienceGain(PlayerDto playerDto, EnemyDto enemyDto) {
+        int experienceGain = enemyDto.getLevel() * 10;
+        if (playerDto.getLevel() > enemyDto.getLevel()) {
             experienceGain = experienceGain / 2;
         }
         return experienceGain;
     }
 
-    public void levelUp(Player player){
-        if (player.getExperiencePoints() >= player.getLevel() * 100) {
-            player.setLevel(player.getLevel() + 1);
-            player.setExperiencePoints(0);
+    public void levelUp(PlayerDto playerDto) {
+        if (playerDto.getExperiencePoints() >= playerDto.getLevel() * 100) {
+            playerDto.setLevel(playerDto.getLevel() + 1);
+            playerDto.setExperiencePoints(0);
         }
     }
 
-    public boolean isPlayerInLocation (Player player, Location location){
-        return player.getLocation().equals(location);
+    public boolean isPlayerInLocation(PlayerDto playerDto, LocationDto locationDto) {
+        return playerDto.getLocation().equals(locationDto);
     }
 
-    public List<Enemy> getEnemiesInLocation (Location location){
-        List<Enemy> enemies = new ArrayList<>();
-        for (Enemy enemy : location.getEnemies()) {
+    public List<EnemyDto> getEnemiesInLocation(LocationDto locationDto) {
+        List<EnemyDto> enemies = new ArrayList<>();
+        for (Enemy enemy : locationDto.getEnemies()) {
             if (Enemy.isAlive(enemy)) {
-                enemies.add(enemy);
+                enemies.add(enemy.toDto());
             }
         }
         return enemies;

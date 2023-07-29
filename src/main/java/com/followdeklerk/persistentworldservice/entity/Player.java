@@ -1,5 +1,6 @@
 package com.followdeklerk.persistentworldservice.entity;
 
+import com.followdeklerk.persistentworldservice.dto.PlayerDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -75,8 +76,30 @@ public class Player {
     private List<DamageType> damageType;
 
     @Column(name = "strength")
-    private Integer Strength;
+    private Integer strength;
 
     @Column(name = "intelligence")
     private Integer intelligence;
+
+    public PlayerDto toDto() {
+        PlayerDto playerDto = new PlayerDto();
+        playerDto.setName(this.getName());
+        playerDto.setExperiencePoints(this.getExperiencePoints());
+        playerDto.setLevel(this.getLevel());
+        playerDto.setMaxHealth(this.getMaxHealth());
+        playerDto.setHealth(this.getHealth());
+        playerDto.setInventory(this.getInventory());
+        playerDto.setLocation(this.getLocation());
+        playerDto.setDescription(this.getDescription());
+        playerDto.setCreatedAt(this.getCreatedAt());
+        playerDto.setUpdatedAt(this.getUpdatedAt());
+        playerDto.setAttack(this.getAttack());
+        playerDto.setDefense(this.getDefense());
+        playerDto.setAttackType(this.getAttackType());
+        playerDto.setDamageType(this.getDamageType());
+        playerDto.setStrength(this.getStrength());
+        playerDto.setIntelligence(this.getIntelligence());
+        playerDto.setVersion(this.getVersion());
+        return playerDto;
+    }
 }
